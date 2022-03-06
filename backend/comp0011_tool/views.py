@@ -31,6 +31,6 @@ class FileUploadView(APIView):
     # save questions here
     def post(self, request, format=None):
         for line in request.data['file']:
-            s = line.decode()
+            s = line.decode().strip()
             print(s)
         return Response(request.data['file'])
