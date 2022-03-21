@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 
 import Navbar from "../../components/Navbar/Navbar";
 import NavigationButton from "../../components/NavigationButton/NavigationButton";
+import Matrix from "../../components/Matrix/Matrix.js";
 
 import { Box, Container, Grid, TextField, Button } from "@mui/material";
 const Questions = () => {
@@ -56,8 +57,8 @@ const Questions = () => {
                     </MathJax.Provider>
                 </Box>
                 <Box sx={{ mb: 10 }}>
-                    <TextField id="standard-basic" label="Answer" variant="standard" sx={{ mr: 5 }} />
-                    <Button variant="contained" disabled>Submit</Button>
+                    <Matrix onChange = {(change) => console.log("Matrix:", change)}/>
+                    <Button variant="contained">Submit</Button>
                 </Box>
                 <Box sx={{ position: 'inherit', right: '10%', bottom: '10%', flexGrow: 1 }}>
                     <Grid container>
