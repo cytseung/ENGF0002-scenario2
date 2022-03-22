@@ -37,6 +37,7 @@ const Questions = () => {
     React.useEffect(() => {
         const m1Latex = generateMatrixLatex(question.matrix1);
         const m2Latex = generateMatrixLatex(question.matrix2);
+        console.log(question);
         const qTextArray = question.type.text.split(/\${.*?}/g);
         setM1Latex(m1Latex);
         setM2Latex(m2Latex);
@@ -57,8 +58,21 @@ const Questions = () => {
                     </MathJax.Provider>
                 </Box>
                 <Box sx={{ mb: 10 }}>
-                    <Matrix onChange = {(change) => console.log("Matrix:", change)}/>
-                    <Button variant="contained">Submit</Button>
+                    <Matrix onSubmit = {(answer) => 
+                    {
+                        const requestOptions = {
+			    method: 'POST',
+			    headers: { 'Content-Type': 'application/json' },
+			    body: JSON.stringify({ title: answer })
+			};
+			fetch('http://localhost:8000/api/imported-matrix-questions/1/', requestOptions)
+			    .then(response =>
+			    {
+			        console.log("response", response.json())
+			    });
+			    //.then(data => setPostId(data.id));
+                    }
+                    }/>
                 </Box>
                 <Box sx={{ position: 'inherit', right: '10%', bottom: '10%', flexGrow: 1 }}>
                     <Grid container>
