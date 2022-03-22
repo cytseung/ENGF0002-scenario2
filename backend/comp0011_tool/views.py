@@ -15,8 +15,17 @@ class TypeViewSet(viewsets.ModelViewSet):
     serializer_class = TypeSerializer
 
 class ImportedMatrixQuestionViewSet(viewsets.ModelViewSet):
-    queryset = ImportedMatrixQuestion.objects.all()
     serializer_class = ImportedMatrixQuestionSerializer
+    
+    def get_queryset(self):
+        if not self.request.query_params.get('num'):
+            # simply return all questions in order if num parameter is not given
+            return ImportedMatrixQuestion.objects.all()
+        try:
+            num = int(self.request.query_params['num'])
+            return ImportedMatrixQuestion.objects.all().order_by('?')[:num]
+        except ValueError:
+            raise ValidationError("num must be a valid number")
 
     @action(detail=False)
     def total_number_of_questions(self, request):

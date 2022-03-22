@@ -6,7 +6,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('types', views.TypeViewSet)
-router.register('imported-matrix-questions', views.ImportedMatrixQuestionViewSet)
+router.register('imported-matrix-questions', views.ImportedMatrixQuestionViewSet, basename='imported-matrix-questions')
 
 urlpatterns = [
     path('imported-matrix-questions/total_number_of_questions/', views.ImportedMatrixQuestionViewSet.as_view({'get':'total_number_of_questions'}), name='total_question_number'),
