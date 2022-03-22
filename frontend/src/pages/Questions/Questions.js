@@ -60,6 +60,7 @@ const Questions = () => {
                 <Box sx={{ mb: 10 }}>
                     <Matrix onSubmit={async (answer) => {
                         console.log(`answer: ${answer}`);
+                        const ans = JSON.stringify(answer)
                         //     const requestOptions = {
                         //         method: 'POST',
                         //         headers: { 'Content-Type': 'application/json' },
@@ -71,7 +72,7 @@ const Questions = () => {
                         //         });
                         //     //.then(data => setPostId(data.id));
                         // }
-                        const payload = { answer: answer };
+                        const payload = { answer: ans };
                         const id = 1;
                         try {
                             const response = await axios.post(`${API_ROOT}imported-matrix-questions/${id}/`, payload);
