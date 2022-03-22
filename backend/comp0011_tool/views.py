@@ -54,7 +54,7 @@ class FileUploadView(APIView):
             for i in range(numQ):
                 q_type = file.readline().decode().strip()
                 if all(t.name != q_type for t in Type.objects.all()):
-                    raise ValidationError({f'{count} question(s) imported. {q_type} type not defined'.format(q_type=q_type, count=count)})
+                    raise ValidationError({'importedCount': count, 'error':f'{q_type} type not defined'.format(q_type=q_type)})
                 q_type_obj = Type.objects.get(name=q_type)
                 try:
                     m1_m, m1_n =list(map(int, file.readline().decode().strip().split()))
@@ -62,7 +62,7 @@ class FileUploadView(APIView):
                     m1_values = list(map(int, file.readline().decode().strip().split()))
                     m2_values = list(map(int ,file.readline().decode().strip().split()))
                     if m1_m * m1_n != len(m1_values) or m2_m * m2_n != len(m2_values):
-                        raise ValidationError({f'{count} question(s) imported. Dimensions do not match with number of elements'.format(count=count)})
+                        raise ValidationError({'importedCount': count, 'error':'Dimensions do not match with number of elements'})
                     m1 = []
                     m2 = []
                     for i in range(m1_m):
@@ -78,7 +78,7 @@ class FileUploadView(APIView):
                     ans_m, ans_n = list(map(int, file.readline().decode().strip().split()))
                     ans_values = list(map(int, file.readline().decode().strip().split()))
                     if ans_m * ans_n != len(ans_values):
-                        raise ValidationError({f'{count} question(s) imported. Dimensions do not match with number of elements'.format(count=count)})
+                        raise ValidationError({'importedCount': count, 'error':'Dimensions do not match with number of elements'})
                     ans = []
                     for i in range(ans_m):
                         row = []
@@ -90,11 +90,8 @@ class FileUploadView(APIView):
                     count += 1
 
                 except ValueError:
-                    raise ValidationError({f"{count} question(s) imported. Dimensions must be integers".format(count=count)})
-            if file.readline() != "":
-                raise ValidationError({f"{count} question(s) imported. You specifed only {numQ} but provided more than {numQ} question(s)".format(count=count,numQ=numQ)})
+                    raise ValidationError({'importedCount': count, 'error':'Dimensions must be integers'})
+            if file.readline().decode() != "":
+                raise ValidationError({'importedCount': count, 'error':f'You specifed only {numQ} but provided more than {numQ} question(s)'.format(count=count,numQ=numQ)})
             
-
-
-            
-        return Response({"Import Success. {count} question(s) imported.".format(count=count)})
+        return Response({'importedCount': count, 'error':None})
