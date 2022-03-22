@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -17,6 +18,9 @@ class ImportedMatrixQuestionViewSet(viewsets.ModelViewSet):
     queryset = ImportedMatrixQuestion.objects.all()
     serializer_class = ImportedMatrixQuestionSerializer
 
+    @action(detail=False)
+    def total_number_of_questions(self, request):
+        return Response(ImportedMatrixQuestion.objects.count())
     
 class CheckAnswerView(APIView):
     def post(self, request, pk=None):
