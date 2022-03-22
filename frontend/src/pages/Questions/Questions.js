@@ -3,6 +3,7 @@ import axios from 'axios';
 import MathJax from "react-mathjax";
 import { useLocation } from "react-router-dom";
 
+import { API_ROOT } from '../../config/global';
 import Navbar from "../../components/Navbar/Navbar";
 import NavigationButton from "../../components/NavigationButton/NavigationButton";
 import Matrix from "../../components/Matrix/Matrix.js";
@@ -37,7 +38,6 @@ const Questions = () => {
     React.useEffect(() => {
         const m1Latex = generateMatrixLatex(question.matrix1);
         const m2Latex = generateMatrixLatex(question.matrix2);
-        console.log(question);
         const qTextArray = question.type.text.split(/\${.*?}/g);
         setM1Latex(m1Latex);
         setM2Latex(m2Latex);
@@ -58,21 +58,29 @@ const Questions = () => {
                     </MathJax.Provider>
                 </Box>
                 <Box sx={{ mb: 10 }}>
-                    <Matrix onSubmit = {(answer) => 
-                    {
-                        const requestOptions = {
-			    method: 'POST',
-			    headers: { 'Content-Type': 'application/json' },
-			    body: JSON.stringify({ title: answer })
-			};
-			fetch('http://localhost:8000/api/imported-matrix-questions/1/', requestOptions)
-			    .then(response =>
-			    {
-			        console.log("response", response.json())
-			    });
-			    //.then(data => setPostId(data.id));
+                    <Matrix onSubmit={async (answer) => {
+                        console.log(`answer: ${answer}`);
+                        //     const requestOptions = {
+                        //         method: 'POST',
+                        //         headers: { 'Content-Type': 'application/json' },
+                        //         body: JSON.stringify({ title: answer })
+                        //     };
+                        //     fetch('http://localhost:8000/api/imported-matrix-questions/1/', requestOptions)
+                        //         .then(response => {
+                        //             // console.log("response", response.json())
+                        //         });
+                        //     //.then(data => setPostId(data.id));
+                        // }
+                        const payload = { answer: answer };
+                        const id = 1;
+                        try {
+                            const response = await axios.post(`${API_ROOT}imported-matrix-questions/${id}/`, payload);
+                            console.log(response.data);
+                        } catch (error) {
+                            console.log(error);
+                        }
                     }
-                    }/>
+                    } />
                 </Box>
                 <Box sx={{ position: 'inherit', right: '10%', bottom: '10%', flexGrow: 1 }}>
                     <Grid container>
