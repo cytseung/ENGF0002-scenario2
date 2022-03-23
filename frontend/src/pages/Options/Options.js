@@ -2,44 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+import {API_ROOT} from "../../config/global"
 import Navbar from "../../components/Navbar/Navbar";
 import NavigationButton from '../../components/NavigationButton/NavigationButton';
 
 import { Container, Box, Grid, FormControl, InputLabel, Select, Button, MenuItem } from "@mui/material";
-
-const dummyData = {
-    totalNumber: 18
-}
-function getData(dummyData) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(dummyData), 1000)
-    })
-}
-
-const dummyQData = {
-    questions: [{
-        "id": 2,
-        "type": {
-            "id": 1,
-            "name": "matadd",
-            "text": "Please enter the sum of ${m1Latex} and ${m2Latex}."
-        },
-        "created_on": "2022-01-07T18:30:38.440571Z",
-        "matrix1": "[[1,2,3],[4,5,6]]",
-        "matrix2": "[[1,5,3],[1,2,5]]"
-    },{
-        "id": 4,
-        "type": {
-            "id": 2,
-            "name": "matmul",
-            "text": "Please enter the product of ${m1Latex} and ${m2Latex}."
-        },
-        "created_on": "2022-01-08T18:30:38.440571Z",
-        "matrix1": "[[1,2,3],[4,5,6],[7,8,9]]",
-        "matrix2": "[[1,0,0],[0,1,0],[0,0,1]]"
-    }]
-};
-console.log(dummyQData)
 
 const Options = () => {
     const [number, setNumber] = React.useState(0);
@@ -54,8 +21,8 @@ const Options = () => {
         async function getTotalNum() {
             try {
                 // get total num here
-                let response = await getData(dummyData);
-                setTotalNum(response.totalNumber);
+                let response = await axios.get(`${API_ROOT}imported-matrix-questions/total_number_of_questions`)
+                setTotalNum(response.data.totalNumber);
             } catch (e) {
                 console.log(e)
             }
@@ -66,9 +33,9 @@ const Options = () => {
     const handleSubmitNumber = async (e) => {
         // get questions from server here
         try {
-            let response = await getData(dummyQData);
-            if (response.questions.length !== 0){
-                navigate('/questions',{state: response.questions});
+            let response = await axios.get(`${API_ROOT}imported-matrix-questions/?num=${number}`)
+            if (response.data.length !== 0){
+                navigate('/questions',{state: response.data});
             }
         } catch (e) {
             console.log(e)

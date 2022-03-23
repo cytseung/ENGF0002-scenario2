@@ -29,7 +29,7 @@ class ImportedMatrixQuestionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False)
     def total_number_of_questions(self, request):
-        return Response(ImportedMatrixQuestion.objects.count())
+        return Response({'totalNumber': ImportedMatrixQuestion.objects.count()})
     
 class CheckAnswerView(APIView):
     def post(self, request, pk=None):
