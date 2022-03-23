@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import MathJax from "react-mathjax";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { API_ROOT } from '../../config/global';
 import Navbar from "../../components/Navbar/Navbar";
@@ -17,7 +17,8 @@ const Questions = () => {
     const [m2Latex, setM2Latex] = React.useState("");
     const [qTextArray, setQTextArray] = React.useState([]);
     const [score, setScore] = React.useState(0);
-
+    
+    const navigate = useNavigate();
     const total = questions.length;
 
     const generateMatrixLatex = (matrixString) => {
@@ -44,6 +45,11 @@ const Questions = () => {
         setM2Latex(m2Latex);
         setQTextArray(qTextArray);
     }, [question])
+
+    const handleNavigateToFinish = () => {
+        navigate("/results", {state: { score } })      
+    }
+
 
     return (
         <>
@@ -82,7 +88,7 @@ const Questions = () => {
                         <Grid item align="right" xs={4} >
                             {questions.indexOf(question) + 1 < total
                                 ? <NavigationButton variant="contained" onClick={() => { setQuestion(questions[questions.indexOf(question) + 1]) }}>Next</NavigationButton>
-                                : <NavigationButton variant="contained">Finish</NavigationButton>}
+                                : <NavigationButton variant="contained" onClick={handleNavigateToFinish}>Finish</NavigationButton>}
 
                         </Grid>
                     </Grid>

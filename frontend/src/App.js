@@ -16,6 +16,7 @@ import Menu from "./pages/Menu/Menu"
 import Import from "./pages/Import/Import"
 import Options from "./pages/Options/Options"
 import Questions from "./pages/Questions/Questions"
+import Results from "./pages/Results/Results"
 import NotFound from "./pages/NotFound/NotFound"
 
 const theme = createTheme({
@@ -28,13 +29,13 @@ const theme = createTheme({
       default: '#f2f3f5',
     }
   },
-  components:{
-    MuiContainer:{
-      variants:[
+  components: {
+    MuiContainer: {
+      variants: [
         {
-          props:{variant:'main'},
-          style:{
-            minHeight:'50px'
+          props: { variant: 'main' },
+          style: {
+            minHeight: '50px'
           }
         }
       ]
@@ -55,6 +56,7 @@ function App() {
               <Route path="/import" element={<Import />} />
               <Route path="/options" element={<Options />} />
               <Route path="/questions" element={<Questions />} />
+              <Route path="/results" element={<Results />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Router>
