@@ -16,6 +16,7 @@ const Questions = () => {
     const [m1Latex, setM1Latex] = React.useState("");
     const [m2Latex, setM2Latex] = React.useState("");
     const [qTextArray, setQTextArray] = React.useState([]);
+    const [score, setScore] = React.useState(0);
 
     const total = questions.length;
 
@@ -59,24 +60,14 @@ const Questions = () => {
                 </Box>
                 <Box sx={{ mb: 10 }}>
                     <Matrix onSubmit={async (answer) => {
-                        console.log(`answer: ${answer}`);
                         const ans = JSON.stringify(answer)
-                        //     const requestOptions = {
-                        //         method: 'POST',
-                        //         headers: { 'Content-Type': 'application/json' },
-                        //         body: JSON.stringify({ title: answer })
-                        //     };
-                        //     fetch('http://localhost:8000/api/imported-matrix-questions/1/', requestOptions)
-                        //         .then(response => {
-                        //             // console.log("response", response.json())
-                        //         });
-                        //     //.then(data => setPostId(data.id));
-                        // }
                         const payload = { answer: ans };
                         const id = 1;
                         try {
                             const response = await axios.post(`${API_ROOT}imported-matrix-questions/${id}/`, payload);
-                            console.log(response.data);
+                            if(response.data.isCorrect)
+                            	setScore(score+1)
+                            console.log("Score:", score)
                         } catch (error) {
                             console.log(error);
                         }

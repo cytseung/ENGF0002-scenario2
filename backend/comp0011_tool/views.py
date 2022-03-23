@@ -35,7 +35,7 @@ class CheckAnswerView(APIView):
     def post(self, request, pk=None):
         q = get_object_or_404(ImportedMatrixQuestion, pk=pk)
         user_ans = request.data["answer"]
-        if user_ans == q.answer:
+        if ''.join(c for c in user_ans if c.isdigit() or c in "[]," ) ==	''.join(c for c in q.answer if c.isdigit() or c in "[]," ):
             return Response({'isCorrect':True})
         return Response({'isCorrect':False})
 
