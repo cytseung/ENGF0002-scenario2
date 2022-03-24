@@ -12,14 +12,18 @@ import { Box, Container, Grid, TextField, Button } from "@mui/material";
 const Questions = () => {
     const { state } = useLocation();
     const questions = state;
+    console.log(questions)
     const [question, setQuestion] = React.useState(questions[0]);
     const [m1Latex, setM1Latex] = React.useState("");
     const [m2Latex, setM2Latex] = React.useState("");
     const [qTextArray, setQTextArray] = React.useState([]);
     const [score, setScore] = React.useState(0);
-    
+    const [correctState, setCorrectState] = React.useState(false);
+
     const navigate = useNavigate();
     const total = questions.length;
+
+    const matrixState = React.useRef([["0","0"],["0","0"]])
 
     const generateMatrixLatex = (matrixString) => {
         let matrix = JSON.parse(matrixString);
@@ -47,9 +51,26 @@ const Questions = () => {
     }, [question])
 
     const handleNavigateToFinish = () => {
-        navigate("/results", {state: { score } })      
+        navigate("/results", { state: { score } })
     }
 
+    const answerSubmit = async (answer) => {
+        const ans = JSON.stringify(answer)
+        const payload = { answer: ans };
+        try {
+            const response = await axios.post(`${API_ROOT}imported-matrix-questions/${question.id}/`, payload);
+            if (response.data.isCorrect){
+                setScore(score => score + 1);
+                setQuestion(questions[questions.indexOf(question) + 1]);
+                alert("Correct!")
+                return true;
+            }
+            alert("Not Correct! Try again!")
+            return false;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <>
@@ -65,20 +86,7 @@ const Questions = () => {
                     </MathJax.Provider>
                 </Box>
                 <Box sx={{ mb: 10 }}>
-                    <Matrix onSubmit={async (answer) => {
-                        const ans = JSON.stringify(answer)
-                        const payload = { answer: ans };
-                        const id = 1;
-                        try {
-                            const response = await axios.post(`${API_ROOT}imported-matrix-questions/${id}/`, payload);
-                            if(response.data.isCorrect)
-                            	setScore(score+1)
-                            console.log("Score:", score)
-                        } catch (error) {
-                            console.log(error);
-                        }
-                    }
-                    } />
+                    <Matrix onSubmit={answerSubmit} />
                 </Box>
                 <Box sx={{ position: 'inherit', right: '10%', bottom: '10%', flexGrow: 1 }}>
                     <Grid container>

@@ -42,10 +42,15 @@ export default class Matrix extends React.Component {
   submit = () => {
   	let answer = this.state.matrix.slice().map(row => row.map(val =>
   	{
-  		let newVal = parseInt(!((val.length==1 || (val.length==2 && val[1]=='0')) && val[0]=='-') ? val : "0");
+  		let newVal = parseInt(!((val.length===1 || (val.length===2 && val[1]==='0')) && val[0]==='-') ? val : "0");
   		return isNaN(newVal)?0:newVal; 
   	}))
-  	this.props.onSubmit(answer);
+  	const isCorrect = this.props.onSubmit(answer);
+	if (isCorrect){
+		this.state.matrix = [["0","0"],["0","0"]];
+		this.state.rowSize = 2;
+		this.state.colSize = 2;
+	}
   }
   
   renderMatrix() {
@@ -56,6 +61,9 @@ export default class Matrix extends React.Component {
                 )})
   }
   
+
+
+
   render() {
   	const matrixInputStyle={
 	    minWidth: '3.4ch',

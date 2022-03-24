@@ -9,12 +9,11 @@ import {Box, Grid} from '@mui/material'
 
 const Results = () => {
     const { state } = useLocation();
-    console.log(state);
     const score = state.score;
     return (
         <div>
             <Navbar>Results</Navbar>
-            <p>Your final score is {score}.</p>
+            <h2>Your final score is {score}.</h2>
             <Box m = {5} sx={{ position: 'inherit', right: '10%', bottom: '10%' }}>
                 <Grid item align="right">
                     <NavigationButton href="/" variant="contained" >Back to Menu</NavigationButton>
