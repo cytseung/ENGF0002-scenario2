@@ -8,7 +8,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import NavigationButton from "../../components/NavigationButton/NavigationButton";
 import Matrix from "../../components/Matrix/Matrix.js";
 
-import { Box, Container, Grid, TextField, Button } from "@mui/material";
+import { Box, Container, Grid, Modal, Typography } from "@mui/material";
 const Questions = () => {
     const { state } = useLocation();
     const questions = state;
@@ -18,12 +18,25 @@ const Questions = () => {
     const [m2Latex, setM2Latex] = React.useState("");
     const [qTextArray, setQTextArray] = React.useState([]);
     const [score, setScore] = React.useState(0);
+    const [open, setOpen] = React.useState(false);
     const [correctState, setCorrectState] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const navigate = useNavigate();
     const total = questions.length;
 
-    const matrixState = React.useRef([["0","0"],["0","0"]])
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
 
     const generateMatrixLatex = (matrixString) => {
         let matrix = JSON.parse(matrixString);
@@ -59,13 +72,15 @@ const Questions = () => {
         const payload = { answer: ans };
         try {
             const response = await axios.post(`${API_ROOT}imported-matrix-questions/${question.id}/`, payload);
-            if (response.data.isCorrect){
+            if (response.data.isCorrect) {
                 setScore(score => score + 1);
+                setCorrectState(true);
+                setOpen(true);
                 setQuestion(questions[questions.indexOf(question) + 1]);
-                alert("Correct!")
                 return true;
             }
-            alert("Not Correct! Try again!")
+            setCorrectState(false);
+            setOpen(true);
             return false;
         } catch (error) {
             console.log(error);
@@ -102,6 +117,22 @@ const Questions = () => {
                     </Grid>
                 </Box>
             </Container>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    {correctState
+                        ? <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Correct
+                        </Typography>
+                        : <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Wrong! Please try again!
+                        </Typography>}
+                </Box>
+            </Modal>
         </>
     )
 }
