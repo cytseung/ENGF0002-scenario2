@@ -76,10 +76,11 @@ const Questions = () => {
             if (response.data.isCorrect) {
                 setScore(score => score + 1);
                 return true;
+            } else {
+                setCorrectState(false);
+                setOpen(true);
+                return false;
             }
-            setCorrectState(false);
-            setOpen(true);
-            return false;
         } catch (error) {
             console.log(error);
         }
@@ -91,7 +92,7 @@ const Questions = () => {
             setOpen(true);
             if (questions.indexOf(question) + 1 < total)
                 setQuestion(questions[questions.indexOf(question) + 1]);
-            else{
+            else {
                 handleNavigateToFinish();
             }
         } else {
